@@ -17,10 +17,37 @@ public class StatementPrinter {
         return print(invoice.customer, rowsToPrint, convertToHtml);
     }
 
+    private List<TableRow> calculateAndReturnTableRows(Invoice invoice, Map<String, Play> plays) {
+        final List<TableRow> rows = new ArrayList<>();
+        for (var perf : invoice.performances) {
+            var play = plays.get(perf.playID);
+            var thisAmount = 0;
+            switch (play.type) {
+                case "tragedy":
+                    thisAmount = 40000;
+                    if (perf.audience > 30) {
+                        thisAmount += 1000 * (perf.audience - 30);
+                    }
+                    break;
+                case "comedy":
+                    thisAmount = 30000;
+                    if (perf.audience > 20) {
+                        thisAmount += 10000 + 500 * (perf.audience - 20);
+                    }
+                    thisAmount += 300 * perf.audience;
+                    break;
+                default:
+                    throw new Error("unknown type: ${play.type}");
+            }
+            rows.add(new TableRow(play.name, play.type, thisAmount, perf.audience));
+        }
+        return rows;
+    }
+
     private String print(String customer, List<TableRow> rowsToPrint, boolean convertToHtml) {
         final NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
-        var totalAmount = getTotalAmount(rowsToPrint);
-        var volumeCredits = getVolumeCredits(rowsToPrint);
+        final var totalAmount = getTotalAmount(rowsToPrint);
+        final var volumeCredits = getVolumeCredits(rowsToPrint);
         final StringBuilder sb = new StringBuilder();
         if (convertToHtml) {
             sb.append(String.format("<h1>Statement for %s</h1>\n", customer));
@@ -64,33 +91,6 @@ public class StatementPrinter {
             sb.append(String.format("You earned %s credits\n", volumeCredits));
         }
         return sb.toString();
-    }
-
-    private List<TableRow> calculateAndReturnTableRows(Invoice invoice, Map<String, Play> plays) {
-        final List<TableRow> rows = new ArrayList<>();
-        for (var perf : invoice.performances) {
-            var play = plays.get(perf.playID);
-            var thisAmount = 0;
-            switch (play.type) {
-                case "tragedy":
-                    thisAmount = 40000;
-                    if (perf.audience > 30) {
-                        thisAmount += 1000 * (perf.audience - 30);
-                    }
-                    break;
-                case "comedy":
-                    thisAmount = 30000;
-                    if (perf.audience > 20) {
-                        thisAmount += 10000 + 500 * (perf.audience - 20);
-                    }
-                    thisAmount += 300 * perf.audience;
-                    break;
-                default:
-                    throw new Error("unknown type: ${play.type}");
-            }
-            rows.add(new TableRow(play.name, play.type, thisAmount, perf.audience));
-        }
-        return rows;
     }
 
     private int getTotalAmount(List<TableRow> rows) {
