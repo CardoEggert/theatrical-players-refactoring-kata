@@ -95,16 +95,16 @@ class StatementPrinterTest {
         assertThat(receipt).isEqualTo("""
                                               <h1>Statement for BigCo</h1>
                                               <table>
-                                               <tr>
-                                                 <th>play</th>
-                                                 <th>seats</th>
-                                                 <th>cost</th>
-                                               </tr>
-                                               <tr>
-                                                 <td>Hamlet</td>
-                                                 <td>$400.00</td>
-                                                 <td>10</td>
-                                               </tr>
+                                              <tr>
+                                                <th>play</th>
+                                                <th>seats</th>
+                                                <th>cost</th>
+                                              </tr>
+                                              <tr>
+                                                <td>Hamlet</td>
+                                                <td>$400.00</td>
+                                                <td>10</td>
+                                              </tr>
                                               </table>
                                               <p>
                                               Amount owed is <em>$400.00</em>
@@ -151,21 +151,21 @@ class StatementPrinterTest {
         assertThat(receipt).isEqualTo("""
                                               <h1>Statement for BigCo</h1>
                                               <table>
-                                                <tr>
-                                                  <th>play</th>
-                                                  <th>seats</th>
-                                                  <th>cost</th>
-                                                </tr>
-                                                <tr>
-                                                  <td>Hamlet</td>
-                                                  <td>$400.00</td>
-                                                  <td>10</td>
-                                                </tr>
-                                                <tr>
-                                                  <td>As You Like It</td>
-                                                  <td>$345.00</td>
-                                                  <td>15</td>
-                                                </tr>
+                                              <tr>
+                                                <th>play</th>
+                                                <th>seats</th>
+                                                <th>cost</th>
+                                              </tr>
+                                              <tr>
+                                                <td>Hamlet</td>
+                                                <td>$400.00</td>
+                                                <td>10</td>
+                                              </tr>
+                                              <tr>
+                                                <td>As You Like It</td>
+                                                <td>$345.00</td>
+                                                <td>15</td>
+                                              </tr>
                                               </table>
                                               <p>
                                               Amount owed is <em>$745.00</em>
@@ -207,26 +207,26 @@ class StatementPrinterTest {
         assertThat(receipt).isEqualTo("""
                                               <h1>Statement for BigCo</h1>
                                               <table>
-                                                <tr>
-                                                  <th>play</th>
-                                                  <th>seats</th>
-                                                  <th>cost</th>
-                                                </tr>
-                                                <tr>
-                                                  <td>Hamlet</td>
-                                                  <td>$400.00</td>
-                                                  <td>10</td>
-                                                </tr>
-                                                <tr>
-                                                  <td>As You Like It</td>
-                                                  <td>$345.00</td>
-                                                  <td>15</td>
-                                                </tr>
-                                                <tr>
-                                                  <td>Othello</td>
-                                                  <td>$400.00</td>
-                                                  <td>20</td>
-                                                </tr>
+                                              <tr>
+                                                <th>play</th>
+                                                <th>seats</th>
+                                                <th>cost</th>
+                                              </tr>
+                                              <tr>
+                                                <td>Hamlet</td>
+                                                <td>$400.00</td>
+                                                <td>10</td>
+                                              </tr>
+                                              <tr>
+                                                <td>As You Like It</td>
+                                                <td>$345.00</td>
+                                                <td>15</td>
+                                              </tr>
+                                              <tr>
+                                                <td>Othello</td>
+                                                <td>$400.00</td>
+                                                <td>20</td>
+                                              </tr>
                                               </table>
                                               <p>
                                               Amount owed is <em>$1,145.00</em>
