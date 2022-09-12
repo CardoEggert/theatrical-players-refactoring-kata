@@ -7,6 +7,10 @@ import java.util.Map;
 public class StatementPrinter {
 
     public String print(Invoice invoice, Map<String, Play> plays) {
+        return print(invoice, plays, false);
+    }
+
+    public String print(Invoice invoice, Map<String, Play> plays, boolean convertToHtml) {
         var totalAmount = 0;
         var volumeCredits = 0;
         var result = String.format("Statement for %s\n", invoice.customer);

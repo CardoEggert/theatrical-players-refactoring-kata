@@ -50,6 +50,25 @@ class StatementPrinterTest {
     }
 
     @Test
+    void print_simple_invoice_no_plays_html() {
+        List<Performance> performances = List.of();
+        Map<String, Play> plays = Map.of();
+        Invoice bigCo = new Invoice(CUSTOMER, performances);
+
+        final String receipt = printer.print(bigCo, plays, true);
+
+        assertThat(receipt).isEqualTo("""
+                                                <h1>Statement for BigCo</h1>
+                                                <p>
+                                                Amount owed is <em>$0.00</em>
+                                                </p>
+                                                <p>
+                                                You earned <em>0</em> credits
+                                                </p>
+                                                """);
+    }
+
+    @Test
     void print_simple_invoice_one_play() {
         List<Performance> performances = List.of(PERFORMANCE_TRAGEDY_1);
         Map<String, Play> plays = Map.of(PLAY_TRAGEDY_KEY, PLAY_TRAGEDY);
@@ -65,6 +84,36 @@ class StatementPrinterTest {
                                                 """);
     }
 
+    @Test
+    void print_simple_invoice_one_play_html() {
+        List<Performance> performances = List.of(PERFORMANCE_TRAGEDY_1);
+        Map<String, Play> plays = Map.of(PLAY_TRAGEDY_KEY, PLAY_TRAGEDY);
+        Invoice bigCo = new Invoice(CUSTOMER, performances);
+
+        final String receipt = printer.print(bigCo, plays, true);
+
+        assertThat(receipt).isEqualTo("""
+                                              <h1>Statement for BigCo</h1>
+                                              <table>
+                                               <tr>
+                                                 <th>play</th>
+                                                 <th>seats</th>
+                                                 <th>cost</th>
+                                               </tr>
+                                               <tr>
+                                                 <td>Hamlet</td>
+                                                 <td>$400.00</td>
+                                                 <td>10</td>
+                                               </tr>
+                                              </table>
+                                              <p>
+                                              Amount owed is <em>$400.00</em>
+                                              </p>
+                                              <p>
+                                              You earned <em>0</em> credits
+                                              </p>
+                                                """);
+    }
     @Test
     void print_simple_invoice_one_play_performance_with_history_type() {
         List<Performance> performances = List.of(PERFORMANCE_HISTORY);
@@ -92,6 +141,42 @@ class StatementPrinterTest {
     }
 
     @Test
+    void print_simple_invoice_two_plays_html() {
+        List<Performance> performances = List.of(PERFORMANCE_TRAGEDY_1, PERFORMANCE_COMEDY);
+        Map<String, Play> plays = Map.of(PLAY_TRAGEDY_KEY, PLAY_TRAGEDY, PLAY_COMEDY_KEY, PLAY_COMEDY);
+        Invoice bigCo = new Invoice(CUSTOMER, performances);
+
+        final String receipt = printer.print(bigCo, plays, true);
+
+        assertThat(receipt).isEqualTo("""
+                                              <h1>Statement for BigCo</h1>
+                                              <table>
+                                                <tr>
+                                                  <th>play</th>
+                                                  <th>seats</th>
+                                                  <th>cost</th>
+                                                </tr>
+                                                <tr>
+                                                  <td>Hamlet</td>
+                                                  <td>$400.00</td>
+                                                  <td>10</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>As You Like It</td>
+                                                  <td>$345.00</td>
+                                                  <td>15</td>
+                                                </tr>
+                                              </table>
+                                              <p>
+                                              Amount owed is <em>$745.00</em>
+                                              </p>
+                                              <p>
+                                              You earned <em>3</em> credits
+                                              </p>
+                                                """);
+    }
+
+    @Test
     void print_simple_invoice_three_plays() {
         List<Performance> performances = List.of(PERFORMANCE_TRAGEDY_1, PERFORMANCE_COMEDY, PERFORMANCE_TRAGEDY_2);
         Map<String, Play> plays = Map.of(PLAY_TRAGEDY_KEY, PLAY_TRAGEDY, PLAY_COMEDY_KEY, PLAY_COMEDY, PLAY_TRAGEDY_2_KEY,
@@ -107,6 +192,48 @@ class StatementPrinterTest {
                                                 Othello: $400.00 (20 seats)
                                               Amount owed is $1,145.00
                                               You earned 3 credits
+                                                """);
+    }
+
+    @Test
+    void print_simple_invoice_three_plays_html() {
+        List<Performance> performances = List.of(PERFORMANCE_TRAGEDY_1, PERFORMANCE_COMEDY, PERFORMANCE_TRAGEDY_2);
+        Map<String, Play> plays = Map.of(PLAY_TRAGEDY_KEY, PLAY_TRAGEDY, PLAY_COMEDY_KEY, PLAY_COMEDY, PLAY_TRAGEDY_2_KEY,
+                                         PLAY_TRAGEDY_2);
+        Invoice bigCo = new Invoice(CUSTOMER, performances);
+
+        final String receipt = printer.print(bigCo, plays, true);
+
+        assertThat(receipt).isEqualTo("""
+                                              <h1>Statement for BigCo</h1>
+                                              <table>
+                                                <tr>
+                                                  <th>play</th>
+                                                  <th>seats</th>
+                                                  <th>cost</th>
+                                                </tr>
+                                                <tr>
+                                                  <td>Hamlet</td>
+                                                  <td>$400.00</td>
+                                                  <td>10</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>As You Like It</td>
+                                                  <td>$345.00</td>
+                                                  <td>15</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>Othello</td>
+                                                  <td>$400.00</td>
+                                                  <td>20</td>
+                                                </tr>
+                                              </table>
+                                              <p>
+                                              Amount owed is <em>$1,145.00</em>
+                                              </p>
+                                              <p>
+                                              You earned <em>3</em> credits
+                                              </p>
                                                 """);
     }
 }
