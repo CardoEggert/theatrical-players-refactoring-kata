@@ -13,18 +13,18 @@ public class StatementPrinter {
     }
 
     public String print(Invoice invoice, Map<String, Play> plays, boolean convertToHtml) {
-        final List<TableRow> rowsToPrint = getRowCosts(invoice, plays);
-        var totalAmount = getTotalAmount(rowsToPrint);
-        var volumeCredits = getVolumeCredits(rowsToPrint);
-        return print(invoice, rowsToPrint, totalAmount, volumeCredits, convertToHtml);
+        final List<TableRow> rowsToPrint = calculateAndReturnTableRows(invoice, plays);
+        return print(invoice.customer, rowsToPrint, convertToHtml);
     }
 
-    private String print(Invoice invoice, List<TableRow> rowsToPrint, int totalAmount, int volumeCredits, boolean convertToHtml) {
+    private String print(String customer, List<TableRow> rowsToPrint, boolean convertToHtml) {
         final NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
+        var totalAmount = getTotalAmount(rowsToPrint);
+        var volumeCredits = getVolumeCredits(rowsToPrint);
         final StringBuilder sb = new StringBuilder();
         if (convertToHtml) {
-            sb.append(String.format("<h1>Statement for %s</h1>\n", invoice.customer));
-            if (!invoice.performances.isEmpty()) {
+            sb.append(String.format("<h1>Statement for %s</h1>\n", customer));
+            if (!rowsToPrint.isEmpty()) {
                 sb.append("""
                         <table>
                         <tr>
@@ -54,8 +54,8 @@ public class StatementPrinter {
                               """, frmt.format(totalAmount / 100), volumeCredits));
 
         } else {
-            sb.append(String.format("Statement for %s\n", invoice.customer));
-            if (!invoice.performances.isEmpty()) {
+            sb.append(String.format("Statement for %s\n", customer));
+            if (!rowsToPrint.isEmpty()) {
                 for (TableRow row : rowsToPrint) {
                     sb.append(String.format("  %s: %s (%s seats)\n", row.playName, frmt.format(row.playCost / 100), row.audienceCount));
                 }
@@ -66,7 +66,7 @@ public class StatementPrinter {
         return sb.toString();
     }
 
-    private List<TableRow> getRowCosts(Invoice invoice, Map<String, Play> plays) {
+    private List<TableRow> calculateAndReturnTableRows(Invoice invoice, Map<String, Play> plays) {
         final List<TableRow> rows = new ArrayList<>();
         for (var perf : invoice.performances) {
             var play = plays.get(perf.playID);
