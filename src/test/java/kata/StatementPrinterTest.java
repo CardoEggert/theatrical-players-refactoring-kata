@@ -17,8 +17,9 @@ class StatementPrinterTest {
 
     private static final String CUSTOMER = "BigCo";
     private static final Performance PERFORMANCE_TRAGEDY_1 = new Performance("hamlet", 10);
-    private static final Performance PERFORMANCE_COMEDY = new Performance("as-like", 15);
     private static final Performance PERFORMANCE_TRAGEDY_2 = new Performance("othello", 20);
+    private static final Performance PERFORMANCE_COMEDY_1 = new Performance("as-like", 15);
+    private static final Performance PERFORMANCE_COMEDY_2 = new Performance("as-like", 50);
     private static final Performance PERFORMANCE_HISTORY = new Performance("caesar", 23);
     private static final String PLAY_TRAGEDY_KEY = "hamlet";
     private static final Play PLAY_TRAGEDY = new Play("Hamlet", "tragedy");
@@ -71,7 +72,7 @@ class StatementPrinterTest {
 
         @Test
         void print_simple_invoice_two_plays() {
-            List<Performance> performances = List.of(PERFORMANCE_TRAGEDY_1, PERFORMANCE_COMEDY);
+            List<Performance> performances = List.of(PERFORMANCE_TRAGEDY_1, PERFORMANCE_COMEDY_1);
             Map<String, Play> plays = Map.of(PLAY_TRAGEDY_KEY, PLAY_TRAGEDY, PLAY_COMEDY_KEY, PLAY_COMEDY);
             Invoice bigCo = new Invoice(CUSTOMER, performances);
 
@@ -88,7 +89,7 @@ class StatementPrinterTest {
 
         @Test
         void print_simple_invoice_three_plays() {
-            List<Performance> performances = List.of(PERFORMANCE_TRAGEDY_1, PERFORMANCE_COMEDY, PERFORMANCE_TRAGEDY_2);
+            List<Performance> performances = List.of(PERFORMANCE_TRAGEDY_1, PERFORMANCE_COMEDY_1, PERFORMANCE_TRAGEDY_2);
             Map<String, Play> plays = Map.of(PLAY_TRAGEDY_KEY, PLAY_TRAGEDY, PLAY_COMEDY_KEY, PLAY_COMEDY, PLAY_TRAGEDY_2_KEY,
                                              PLAY_TRAGEDY_2);
             Invoice bigCo = new Invoice(CUSTOMER, performances);
@@ -102,6 +103,25 @@ class StatementPrinterTest {
                                                     Othello: $400.00 (20 seats)
                                                   Amount owed is $1,145.00
                                                   You earned 3 credits
+                                                    """);
+        }
+
+        @Test
+        void print_simple_invoice_lots_of_comedy_performances() {
+            List<Performance> performances = List.of(PERFORMANCE_COMEDY_1, PERFORMANCE_COMEDY_2, PERFORMANCE_COMEDY_1, PERFORMANCE_COMEDY_2);
+            Map<String, Play> plays = Map.of(PLAY_COMEDY_KEY, PLAY_COMEDY);
+            Invoice bigCo = new Invoice(CUSTOMER, performances);
+
+            final String receipt = printer.print(bigCo, plays);
+
+            assertThat(receipt).isEqualTo("""
+                                                  Statement for BigCo
+                                                    As You Like It: $345.00 (15 seats)
+                                                    As You Like It: $700.00 (50 seats)
+                                                    As You Like It: $345.00 (15 seats)
+                                                    As You Like It: $700.00 (50 seats)
+                                                  Amount owed is $2,090.00
+                                                  You earned 66 credits
                                                     """);
         }
     }
@@ -161,7 +181,7 @@ class StatementPrinterTest {
 
         @Test
         void print_simple_invoice_two_plays_html() {
-            List<Performance> performances = List.of(PERFORMANCE_TRAGEDY_1, PERFORMANCE_COMEDY);
+            List<Performance> performances = List.of(PERFORMANCE_TRAGEDY_1, PERFORMANCE_COMEDY_1);
             Map<String, Play> plays = Map.of(PLAY_TRAGEDY_KEY, PLAY_TRAGEDY, PLAY_COMEDY_KEY, PLAY_COMEDY);
             Invoice bigCo = new Invoice(CUSTOMER, performances);
 
@@ -197,7 +217,7 @@ class StatementPrinterTest {
 
         @Test
         void print_simple_invoice_three_plays_html() {
-            List<Performance> performances = List.of(PERFORMANCE_TRAGEDY_1, PERFORMANCE_COMEDY, PERFORMANCE_TRAGEDY_2);
+            List<Performance> performances = List.of(PERFORMANCE_TRAGEDY_1, PERFORMANCE_COMEDY_1, PERFORMANCE_TRAGEDY_2);
             Map<String, Play> plays = Map.of(PLAY_TRAGEDY_KEY, PLAY_TRAGEDY, PLAY_COMEDY_KEY, PLAY_COMEDY, PLAY_TRAGEDY_2_KEY,
                                              PLAY_TRAGEDY_2);
             Invoice bigCo = new Invoice(CUSTOMER, performances);
@@ -233,6 +253,52 @@ class StatementPrinterTest {
                                                   </p>
                                                   <p>
                                                   You earned <em>3</em> credits
+                                                  </p>
+                                                    """);
+        }
+
+        @Test
+        void print_simple_invoice_lots_of_comedy_performances_html() {
+            List<Performance> performances = List.of(PERFORMANCE_COMEDY_1, PERFORMANCE_COMEDY_2, PERFORMANCE_COMEDY_1, PERFORMANCE_COMEDY_2);
+            Map<String, Play> plays = Map.of(PLAY_COMEDY_KEY, PLAY_COMEDY);
+            Invoice bigCo = new Invoice(CUSTOMER, performances);
+
+            final String receipt = printer.print(bigCo, plays, true);
+
+            assertThat(receipt).isEqualTo("""
+                                                  <h1>Statement for BigCo</h1>
+                                                  <table>
+                                                  <tr>
+                                                    <th>play</th>
+                                                    <th>seats</th>
+                                                    <th>cost</th>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>As You Like It</td>
+                                                    <td>$345.00</td>
+                                                    <td>15</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>As You Like It</td>
+                                                    <td>$700.00</td>
+                                                    <td>50</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>As You Like It</td>
+                                                    <td>$345.00</td>
+                                                    <td>15</td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td>As You Like It</td>
+                                                    <td>$700.00</td>
+                                                    <td>50</td>
+                                                  </tr>
+                                                  </table>
+                                                  <p>
+                                                  Amount owed is <em>$2,090.00</em>
+                                                  </p>
+                                                  <p>
+                                                  You earned <em>66</em> credits
                                                   </p>
                                                     """);
         }
